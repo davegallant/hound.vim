@@ -77,6 +77,17 @@ If you want a vertical split instead of a new window:
 let g:hound_vertical_split = 1
 ```
 
+If you want links to blobs in your search results:
+```vimscript
+let g:hound_results_url = 1
+```
+When your cursor is atop the url, use `gx` to open the url.
+
+You may also want to change the default url pattern:
+```vimscript
+let g:hound_url_pattern="https://github.com/{repo}/blob/{revision}/{path}"
+```
+
 Doge
 ------
 <img src="https://i.imgflip.com/hoo6z.jpg" alt="dogehound" style="width: 200px;"/>

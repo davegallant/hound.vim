@@ -34,6 +34,14 @@ if !exists('g:hound_ignore_case')
     let g:hound_ignore_case=0
 endif
 
+if !exists('g:hound_results_url')
+    let g:hound_results_url=0
+endif
+
+if !exists('g:hound_url_pattern')
+    let g:hound_url_pattern="https://github.com/{repo}/blob/{revision}/{path}"
+endif
+
 function! hound#encodeUrl(string) abort
     let mask = "[ \\]'\!\#\$&(),\*\+\/:;=?@\[]"
     return substitute(a:string, mask, '\=printf("%%%x", char2nr(submatch(0)))', 'g')
@@ -169,7 +177,13 @@ function! Hound(...) abort
             for line_match in file_match["Matches"]
                 let s:output.="\n".repo_base_path.file_match["Filename"]
                             \.":".line_match["LineNumber"]
-                            \."\n--------------------------------------------------------------------------------\n"
+                if g:hound_results_url
+                  let file_url = substitute(g:hound_url_pattern, "{repo}", repo, "")
+                  let file_url = substitute(file_url, "{revision}", response["Results"][repo]["Revision"], "")
+                  let file_url = substitute(file_url, "{path}", repo_base_path.file_match["Filename"], "")
+                  let s:output.="\n" . file_url
+                endif
+                let s:output.="\n--------------------------------------------------------------------------------\n"
                 if g:hound_verbose
                     let s:output.=join(line_match["Before"], "\n")
                                 \. "\n" . line_match["Line"] . "\n"
